@@ -1,28 +1,52 @@
+from __future__ import annotations
+
 from abc import ABC
 
 
 class IntegerRange:
-    def __init__(self, min_amount: int, max_amount: int) -> None:
+    def __init__(
+            self,
+            min_amount: int,
+            max_amount: int
+    ) -> None:
         self.min_amount = min_amount
         self.max_amount = max_amount
 
-    def __set_name__(self, owner: str, name: str) -> None:
+    def __set_name__(
+            self,
+            owner: object,
+            name: str
+    ) -> None:
         self.public_name = name
         self.protected_name = "_" + name
 
-    def __get__(self, instance: "IntegerRange", owner: str) -> int:
+    def __get__(
+            self,
+            instance: IntegerRange,
+            owner: object
+    ) -> int:
         return getattr(instance, self.protected_name)
 
-    def __set__(self, instance: "IntegerRange", value: int) -> None:
+    def __set__(
+            self,
+            instance: IntegerRange,
+            value: int
+    ) -> None:
         if not isinstance(value, int):
             raise TypeError
-        if value not in range(self.min_amount, self.max_amount + 1):
+        if not (self.min_amount <= value <= self.max_amount):
             raise ValueError
         setattr(self, self.protected_name, value)
 
 
 class Visitor:
-    def __init__(self, name: str, age: int, weight: int, height: int) -> None:
+    def __init__(
+            self,
+            name: str,
+            age: int,
+            weight: int,
+            height: int
+    ) -> None:
         self.name = name
         self.age = age
         self.weight = weight
@@ -30,7 +54,12 @@ class Visitor:
 
 
 class SlideLimitationValidator(ABC):
-    def __init__(self, age: int, weight: int, height: int) -> None:
+    def __init__(
+            self,
+            age: int,
+            weight: int,
+            height: int
+    ) -> None:
         self.age = age
         self.weight = weight
         self.height = height
@@ -49,7 +78,11 @@ class AdultSlideLimitationValidator(SlideLimitationValidator):
 
 
 class Slide:
-    def __init__(self, name: str, limitation_class: type) -> None:
+    def __init__(
+            self,
+            name: str,
+            limitation_class: SlideLimitationValidator
+    ) -> None:
         self.name = name
         self.limitation_class = limitation_class
 
